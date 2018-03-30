@@ -32,9 +32,12 @@
     TagWindowController *tagWindowController;
     
     NSMenuItem *sessionsMenuSeparator;
+    NSMenuItem *sessionsMenuTotalItem;
     NSMenuItem *sessionsMenuExportItem;
     NSMenuItem *sessionsMenuClearItem;
     NSMutableArray *sessionsMenuItems;
+    
+    long totalSeconds;
     
     BOOL startOnWake;
     BOOL startOnScreensaverEnd;
@@ -59,6 +62,7 @@
 @property(nonatomic, retain) TagWindowController *tagWindowController;
 
 @property(nonatomic, retain) NSMenuItem *sessionsMenuSeparator;
+@property(nonatomic, retain) NSMenuItem *sessionsMenuTotalItem;
 @property(nonatomic, retain) NSMenuItem *sessionsMenuExportItem;
 @property(nonatomic, retain) NSMenuItem *sessionsMenuClearItem;
 @property(nonatomic, retain) NSMutableArray *sessionsMenuItems;

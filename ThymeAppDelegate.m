@@ -46,6 +46,7 @@
 @synthesize preferencesWindowController;
 @synthesize tagWindowController;
 @synthesize sessionsMenuSeparator;
+@synthesize sessionsMenuTotalItem;
 @synthesize sessionsMenuExportItem;
 @synthesize sessionsMenuClearItem;
 @synthesize sessionsMenuItems;
@@ -145,8 +146,11 @@
 - (void)clearSessionsFromMenu
 {
     [menu removeItem:self.sessionsMenuSeparator];
+    [menu removeItem:self.sessionsMenuTotalItem];
     [menu removeItem:self.sessionsMenuExportItem];
     [menu removeItem:self.sessionsMenuClearItem];
+    
+    totalSeconds = 0;
     
     for (NSMenuItem *item in self.sessionsMenuItems) {
         [menu removeItem:item];
@@ -160,10 +164,11 @@
     if ([self.sessionsMenuItems count] == 0)
     {
         [menu insertItem:self.sessionsMenuSeparator atIndex:3];
-        [menu insertItem:self.sessionsMenuExportItem atIndex:4];
-        [menu insertItem:self.sessionsMenuClearItem atIndex:5];
+        [menu insertItem:self.sessionsMenuTotalItem atIndex:4];
+        [menu insertItem:self.sessionsMenuExportItem atIndex:5];
+        [menu insertItem:self.sessionsMenuClearItem atIndex:6];
     }
-    
+        
     NSInteger index = 4 + [self.sessionsMenuItems count];
     
     NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[session stringRepresentation] action:@selector(lol) keyEquivalent:@""];
@@ -171,12 +176,27 @@
     [menu insertItem:item atIndex:index];
     [self.sessionsMenuItems addObject:item];
     [item release];
+    
+    [self.sessionsMenuTotalItem setTitle:[self totalTimeString]];
 }
 
 #pragma mark Model
 
-- (void)save:(NSTimeInterval)value :(NSString*)tag {
+- (NSString*)totalTimeString
+{
+    long hours = totalSeconds / 3600;
+    long minutes = (totalSeconds / 60) % 60;
+    long secs = totalSeconds % 60;
     
+    if (hours > 0)
+        return [NSString stringWithFormat:@"Total: %02ld:%02ld:%02ld", hours, minutes, secs];
+    else
+        return [NSString stringWithFormat:@"Total: %02ld:%02ld", minutes, secs];
+}
+
+- (void)save:(NSTimeInterval)value :(NSString*)tag {
+    totalSeconds = totalSeconds + value;
+
     long totalSeconds = (long) floor(value);
     long hours = totalSeconds / 3600;
     long minutes = (totalSeconds / 60) % 60;
@@ -543,9 +563,16 @@
     self.sessionsMenuClearItem = clearMenuItem;
     [clearMenuItem release];
     
+    NSMenuItem *totalMenuItem = [[NSMenuItem alloc] initWithTitle:@"Total: " action:@selector(export) keyEquivalent:@""];
+    [totalMenuItem setEnabled:NO];
+    self.sessionsMenuTotalItem = totalMenuItem;
+    [totalMenuItem release];
+    
     NSMenuItem *exportMenuItem = [[NSMenuItem alloc] initWithTitle:@"Export..." action:@selector(export) keyEquivalent:@""];
     self.sessionsMenuExportItem = exportMenuItem;
     [exportMenuItem release];
+    
+    totalSeconds = 0;
     
     self.stopwatch = [[Stopwatch alloc] initWithDelegate:self];
     
@@ -784,9 +811,12 @@
     [hotKeyCenter release];
     
     [sessionsMenuSeparator release];
+    [sessionsMenuTotalItem release];
     [sessionsMenuExportItem release];
     [sessionsMenuClearItem release];
     [sessionsMenuItems release];
+    
+    totalSeconds = 0;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	
