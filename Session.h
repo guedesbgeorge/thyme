@@ -21,6 +21,7 @@
 + (NSArray*)allSessions;
 + (NSArray*)allSessionsAsDictionaries;
 + (Session*)sessionWithSeconds:(NSInteger)_seconds minutes:(NSInteger)_minutes hours:(NSInteger)_hours tag:(NSString*)_tag;
++ (NSString*)totalTimeString;
 - (NSString*)timeStringRepresentation;
 - (NSString*)stringRepresentation;
 - (NSDictionary *)asDictionary;

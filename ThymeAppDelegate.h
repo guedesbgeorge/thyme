@@ -37,8 +37,6 @@
     NSMenuItem *sessionsMenuClearItem;
     NSMutableArray *sessionsMenuItems;
     
-    long totalSeconds;
-    
     BOOL startOnWake;
     BOOL startOnScreensaverEnd;
 }

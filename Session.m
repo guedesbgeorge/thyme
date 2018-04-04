@@ -82,6 +82,27 @@
     return session;
 }
 
++ (NSString*) totalTimeString
+{
+    long totalSeconds = 0;
+    
+    NSArray* sessions = [Session allSessions];
+    for (Session* session in sessions) {
+        totalSeconds += [session.hours longValue]*3600 +
+                        [session.minutes longValue]*60 +
+                        [session.seconds longValue];
+    }
+    
+    long hours = totalSeconds / 3600;
+    long minutes = (totalSeconds / 60) % 60;
+    long secs = totalSeconds % 60;
+    
+    if (hours > 0)
+        return [NSString stringWithFormat:@"Total: %02ld:%02ld:%02ld", hours, minutes, secs];
+    else
+        return [NSString stringWithFormat:@"Total: %02ld:%02ld", minutes, secs];
+}
+
 - (NSString*)timeStringRepresentation
 {
     if ([self.hours intValue] > 0)

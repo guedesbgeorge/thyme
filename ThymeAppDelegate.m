@@ -150,8 +150,6 @@
     [menu removeItem:self.sessionsMenuExportItem];
     [menu removeItem:self.sessionsMenuClearItem];
     
-    totalSeconds = 0;
-    
     for (NSMenuItem *item in self.sessionsMenuItems) {
         [menu removeItem:item];
     }
@@ -161,6 +159,7 @@
 
 - (void)addSessionToMenu:(Session*)session
 {
+    NSArray *sessions = [Session allSessions];
     if ([self.sessionsMenuItems count] == 0)
     {
         [menu insertItem:self.sessionsMenuSeparator atIndex:3];
@@ -177,25 +176,17 @@
     [self.sessionsMenuItems addObject:item];
     [item release];
     
-    [self.sessionsMenuTotalItem setTitle:[self totalTimeString]];
+    [self.sessionsMenuTotalItem setTitle:[Session totalTimeString]];
 }
 
 #pragma mark Model
 
 - (NSString*)totalTimeString
 {
-    long hours = totalSeconds / 3600;
-    long minutes = (totalSeconds / 60) % 60;
-    long secs = totalSeconds % 60;
-    
-    if (hours > 0)
-        return [NSString stringWithFormat:@"Total: %02ld:%02ld:%02ld", hours, minutes, secs];
-    else
-        return [NSString stringWithFormat:@"Total: %02ld:%02ld", minutes, secs];
+
 }
 
 - (void)save:(NSTimeInterval)value :(NSString*)tag {
-    totalSeconds = totalSeconds + value;
 
     long totalSeconds = (long) floor(value);
     long hours = totalSeconds / 3600;
@@ -572,8 +563,6 @@
     self.sessionsMenuExportItem = exportMenuItem;
     [exportMenuItem release];
     
-    totalSeconds = 0;
-    
     self.stopwatch = [[Stopwatch alloc] initWithDelegate:self];
     
     NSStatusBar *statusBar = [NSStatusBar systemStatusBar];
@@ -815,8 +804,6 @@
     [sessionsMenuExportItem release];
     [sessionsMenuClearItem release];
     [sessionsMenuItems release];
-    
-    totalSeconds = 0;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	
