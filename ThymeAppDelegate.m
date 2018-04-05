@@ -159,7 +159,6 @@
 
 - (void)addSessionToMenu:(Session*)session
 {
-    NSArray *sessions = [Session allSessions];
     if ([self.sessionsMenuItems count] == 0)
     {
         [menu insertItem:self.sessionsMenuSeparator atIndex:3];
@@ -176,15 +175,10 @@
     [self.sessionsMenuItems addObject:item];
     [item release];
     
-    [self.sessionsMenuTotalItem setTitle:[Session totalTimeString]];
+    [self.sessionsMenuTotalItem setTitle: [NSString stringWithFormat:@"Total: %@", [Session totalTimeString]]];
 }
 
 #pragma mark Model
-
-- (NSString*)totalTimeString
-{
-
-}
 
 - (void)save:(NSTimeInterval)value :(NSString*)tag {
 

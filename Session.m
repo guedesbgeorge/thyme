@@ -98,9 +98,9 @@
     long secs = totalSeconds % 60;
     
     if (hours > 0)
-        return [NSString stringWithFormat:@"Total: %02ld:%02ld:%02ld", hours, minutes, secs];
+        return [NSString stringWithFormat:@"%02ld:%02ld:%02ld", hours, minutes, secs];
     else
-        return [NSString stringWithFormat:@"Total: %02ld:%02ld", minutes, secs];
+        return [NSString stringWithFormat:@"%02ld:%02ld", minutes, secs];
 }
 
 - (NSString*)timeStringRepresentation
