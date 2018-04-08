@@ -548,7 +548,7 @@
     self.sessionsMenuClearItem = clearMenuItem;
     [clearMenuItem release];
     
-    NSMenuItem *totalMenuItem = [[NSMenuItem alloc] initWithTitle:@"Total: " action:@selector(export) keyEquivalent:@""];
+    NSMenuItem *totalMenuItem = [[NSMenuItem alloc] initWithTitle:@"Total: " action:@selector(void) keyEquivalent:@""];
     [totalMenuItem setEnabled:NO];
     self.sessionsMenuTotalItem = totalMenuItem;
     [totalMenuItem release];
