@@ -43,6 +43,7 @@
 @synthesize startPauseItem;
 @synthesize restartItem;
 @synthesize finishItem;
+@synthesize hideTimeItem;
 @synthesize preferencesWindowController;
 @synthesize tagWindowController;
 @synthesize sessionsMenuSeparator;
@@ -62,6 +63,7 @@
         [startPauseItem setTitle:@"Pause"];
         [restartItem setEnabled:YES];
         [finishItem setEnabled:YES];
+        [hideTimeItem setEnabled:YES];
         
         if (notification) {
             [self notifyStart];
@@ -112,6 +114,7 @@
         [startPauseItem setTitle:@"Start"];
         [restartItem setEnabled:NO];
         [finishItem setEnabled:NO];
+        [hideTimeItem setEnabled:NO];
         
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"askForTagOnFinishButton"]) {
             //Show tag window
@@ -161,13 +164,13 @@
 {
     if ([self.sessionsMenuItems count] == 0)
     {
-        [menu insertItem:self.sessionsMenuSeparator atIndex:3];
-        [menu insertItem:self.sessionsMenuTotalItem atIndex:4];
-        [menu insertItem:self.sessionsMenuExportItem atIndex:5];
-        [menu insertItem:self.sessionsMenuClearItem atIndex:6];
+        [menu insertItem:self.sessionsMenuSeparator atIndex:4];
+        [menu insertItem:self.sessionsMenuTotalItem atIndex:5];
+        [menu insertItem:self.sessionsMenuExportItem atIndex:6];
+        [menu insertItem:self.sessionsMenuClearItem atIndex:7];
     }
         
-    NSInteger index = 4 + [self.sessionsMenuItems count];
+    NSInteger index = 5 + [self.sessionsMenuItems count];
     
     NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[session stringRepresentation] action:@selector(lol) keyEquivalent:@""];
     [item setEnabled:NO];
@@ -230,17 +233,26 @@
 
 - (IBAction)onStartPauseClick:(id)sender
 {
+    [self resetHideButton];
     [self toggleWithNotification:NO];
 }
 
 - (IBAction)onRestartClick:(id)sender
 {
+    [self resetHideButton];
     [self restartWithNotification:NO];
 }
 
 - (IBAction)onFinishClick:(id)sender
 {
+    [self resetHideButton];
     [self resetWithNotification:NO];
+}
+
+- (IBAction)onHideTimeClick:(id)sender
+{
+    hideTime = !hideTime;
+    [self updateHideTimeButtonText];
 }
 
 - (IBAction)clear:(id)sender
@@ -278,12 +290,34 @@
         NSImage *logo = [NSImage imageNamed:@"logo_small"];
         [logo setTemplate:YES];
         [statusItem setImage: logo];
+    } else if (hideTime) {
+            [statusItem setLength:25.0];
+            NSString* title = @".";
+            int reminder = (int) [self.stopwatch value] % 3;
+            for(int i = 0; i < reminder; i++) {
+                title = [title stringByAppendingString:@"."];
+            }
+            [statusItem setTitle:title];
     } else {
-        [statusItem setLength:[self.stopwatch value] > 3600 ? 72.0 : 46.0];
-        [statusItem setTitle:[self.stopwatch description]];
-        [statusItem setImage:nil];
+            [statusItem setLength:[self.stopwatch value] > 3600 ? 72.0 : 46.0];
+            [statusItem setTitle:[self.stopwatch description]];
+            [statusItem setImage:nil];
     }
 }
+
+-(void)resetHideButton {
+    hideTime = NO;
+    [self updateHideTimeButtonText];
+}
+
+- (void)updateHideTimeButtonText {
+    NSString* title = @"Hide time";
+    if(hideTime)
+        title = @"Show time";
+    
+    [self.hideTimeItem setTitle:title];
+}
+
 
 #pragma mark Export
 
@@ -350,6 +384,7 @@
 }
 
 - (void) didPause:(id)_stopwatch {
+    [self.hideTimeItem setEnabled:NO];
     [self updateStatusBar];
 }
 
@@ -481,6 +516,7 @@
     [window close];
     startOnWake = NO;
     startOnScreensaverEnd = NO;
+    hideTime = NO;
     
     // Setup the hotkey center
     DDHotKeyCenter *center = [[DDHotKeyCenter alloc] init];

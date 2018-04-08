@@ -27,6 +27,7 @@
     NSMenu *menu;
     NSMenuItem *startPauseItem;
     NSMenuItem *finishItem;
+    NSMenuItem *hideTimeItem;
     
     PreferencesWindowController *preferencesWindowController;
     TagWindowController *tagWindowController;
@@ -39,6 +40,7 @@
     
     BOOL startOnWake;
     BOOL startOnScreensaverEnd;
+    BOOL hideTime;
 }
 
 @property(nonatomic, retain) Stopwatch *stopwatch;
@@ -55,6 +57,7 @@
 @property(nonatomic, retain) IBOutlet NSMenuItem *startPauseItem;
 @property(nonatomic, retain) IBOutlet NSMenuItem *restartItem;
 @property(nonatomic, retain) IBOutlet NSMenuItem *finishItem;
+@property(nonatomic, retain) IBOutlet NSMenuItem *hideTimeItem;
 
 @property(nonatomic, retain) PreferencesWindowController *preferencesWindowController;
 @property(nonatomic, retain) TagWindowController *tagWindowController;
